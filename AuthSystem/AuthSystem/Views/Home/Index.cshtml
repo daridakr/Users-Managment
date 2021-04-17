@@ -1,0 +1,59 @@
+﻿@model IEnumerable<AppUser>
+@{ ViewBag.Title = "Home"; }
+
+@using Microsoft.AspNetCore.Identity
+@using AuthSystem.Areas.Identity.Data
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    ViewData["Title"] = "Users List";
+    AppUser userKey = UserManager.Users.First();
+<form>
+    <div class="text-center">
+        <h2 class="display-4"
+            style="margin-bottom: 1em;">
+            Manage users here
+        </h2>
+    </div>
+        <button asp-controller="Home" asp-action="BlockUser" class="btn btn-primary" style="margin-right: 0.3em;" title="Block user(s)" method="post">Block user(s)</button>
+        <button asp-controller="Home" asp-action="UnblockUser" class="btn btn-success" style="margin-right: 0.3em;" title="Unblock user(s)"><i class="fas fa-unlock-alt"></i></button>
+        <button asp-controller="Home" asp-action="DeleteUser" class="btn btn-danger" style="margin-right: 0.3em;" title="Delete user(s)"><i class="far fa-trash-alt"></i></button>
+        <table class="table table-striped">
+            <thread>
+                <tr>
+                    <th style="text-align: center;">
+                        Select&nbsp;All <br />
+                        <input type="checkbox" id="checkAll" />
+                    </th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Registred</th>
+                    <th>Latest login</th>
+                    <th>Status</th>
+                </tr>
+            </thread>
+            <tbody>
+                @foreach (var user in Model)
+                {
+<tr>
+    <td scope="col"><input type="checkbox" name="State" value="@user.Id" id="state"></td>
+    <td scope="col">@Html.DisplayFor(m => user.Id)</td>
+    <td scope="col">@Html.DisplayFor(m => user.Nickname)</td>
+    <td scope="col">@Html.DisplayFor(m => user.Email)</td>
+    <td scope="col">@Html.DisplayFor(m => user.RegistrationDate)</td>
+    <td scope="col">@Html.DisplayFor(m => user.LastLoginTime)</td>
+    <th scope="col">@Html.DisplayFor(m => user.Status)</th>
+</tr>}
+            </tbody>
+        </table>
+</form>
+}
+else
+{
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
